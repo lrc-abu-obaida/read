@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مسابقة ولاية إبراء التعليمية</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts - Tajawal for clean Arabic typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        .pattern-bg {
+            background-color: #065f46;
+            background-image: radial-gradient(#047857 1px, transparent 1px), radial-gradient(#047857 1px, #065f46 1px);
+            background-size: 40px 40px;
+            background-position: 0 0, 20px 20px;
+        }
+        .transition-all-custom {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between bg-slate-50">
+
+    <header class="pattern-bg text-white shadow-md py-6 px-4">
+        <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3 text-center sm:text-right">
+                <div class="bg-amber-500/20 p-3 rounded-2xl border border-amber-400/30">
+                    <svg class="w-8 h-8 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-xl sm:text-2xl font-bold tracking-wide">مركز مصادر التعلم</h1>
+                    <p class="text-emerald-100 text-sm">مسابقة معلومات ولاية إبراء - سلطنة عُمان</p>
+                </div>
+            </div>
+            <div class="bg-emerald-900/60 px-4 py-2 rounded-xl border border-emerald-700/55 text-xs text-emerald-200">
+                <span>المرحلة الدراسية: التعليم المدرسي</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-3xl w-full mx-auto px-4 py-8">
+
+        <!-- Welcome Screen -->
+        <div id="welcome-screen" class="bg-white rounded-3xl shadow-xl p-6 sm:p-10 border border-slate-100 text-center transition-all-custom">
+            <div class="w-20 h-20 bg-emerald-50 text-emerald-600 rounded-3xl mx-auto flex items-center justify-center mb-6 shadow-inner">
+                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-black text-slate-800 mb-3">اختبر معلوماتك عن ولاية إبراء</h2>
+            <p class="text-slate-600 text-sm sm:text-base max-w-lg mx-auto mb-8 leading-relaxed">
+                مسابقة تفاعلية ممتعة مصممة للطلاب لتقييم استيعابهم للمعلومات الجغرافية والتاريخية والثقافية عن ولاية إبراء بمحافظة شمال الشرقية. تتكون المسابقة من 6 أسئلة موضوعية مع تقييم فوري.
+            </p>
+            <button onclick="startQuiz()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-8 py-4 rounded-2xl shadow-lg shadow-emerald-600/20 transition-all-custom transform hover:-translate-y-0.5 text-base w-full sm:w-auto">
+                ابدأ المسابقة الآن
+            </button>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quiz-screen" class="hidden bg-white rounded-3xl shadow-xl p-6 sm:p-10 border border-slate-100 transition-all-custom">
+            <!-- Progress Bar Header -->
+            <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
+                <span id="question-counter" class="text-sm font-semibold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-xl">السؤال 1 من 6</span>
+                <div class="w-32 sm:w-48 bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                    <div id="progress-bar" class="bg-emerald-600 h-full w-0 transition-all-custom"></div>
+                </div>
+            </div>
+
+            <!-- Question Box -->
+            <div class="mb-8">
+                <h3 id="question-text" class="text-lg sm:text-xl font-bold text-slate-800 leading-snug"></h3>
+            </div>
+
+            <!-- Options Container -->
+            <div id="options-container" class="space-y-3 mb-8">
+                <!-- Dynamically injected options -->
+            </div>
+
+            <!-- Feedback Message -->
+            <div id="feedback-box" class="hidden p-4 rounded-2xl mb-6 text-sm font-medium"></div>
+
+            <!-- Next Button -->
+            <div class="flex justify-end">
+                <button id="next-btn" onclick="nextQuestion()" class="hidden bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-3 rounded-xl shadow-md transition-all-custom text-sm">
+                    السؤال التالي
+                </button>
+            </div>
+        </div>
+
+        <!-- Result Screen -->
+        <div id="result-screen" class="hidden bg-white rounded-3xl shadow-xl p-6 sm:p-10 border border-slate-100 text-center transition-all-custom">
+            <div id="result-icon" class="w-20 h-20 rounded-3xl mx-auto flex items-center justify-center mb-6 shadow-inner text-emerald-600 bg-emerald-50">
+                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-black text-slate-800 mb-2">أحسنت! أتممت المسابقة بنجاح</h2>
+            <p id="result-message" class="text-slate-600 text-sm sm:text-base mb-6"></p>
+            
+            <div class="bg-slate-50 rounded-2xl p-6 max-w-xs mx-auto mb-8 border border-slate-100">
+                <span class="text-xs text-slate-500 block mb-1">النتيجة النهائية</span>
+                <span id="final-score" class="text-4xl font-black text-emerald-600">0 / 6</span>
+            </div>
+
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <button onclick="restartQuiz()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-3 rounded-xl shadow-md transition-all-custom text-sm">
+                    إعادة المسابقة
+                </button>
+                <a href="#github-guide" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-6 py-3 rounded-xl transition-all-custom text-sm inline-flex items-center justify-center gap-2">
+                    كيفية رفع الكود على GitHub
+                </a>
+            </div>
+        </div>
+
+        <section id="github-guide" class="mt-12 bg-white rounded-3xl shadow-xl p-6 sm:p-8 border border-slate-100">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="bg-slate-900 text-white p-2.5 rounded-xl">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+                </div>
+                <h3 class="text-xl font-bold text-slate-800">طريقة حفظ ونشر الكود على GitHub Pages</h3>
+            </div>
+            <p class="text-slate-600 text-sm mb-6 leading-relaxed">
+                يمكنك تحويل هذه الصفحة إلى موقع إلكتروني متاح للجميع عبر الإنترنت بطريقة مجانية تماماً باستخدام ميزة (GitHub Pages). إليك الخطوات البسيطة:
+            </p>
+            <ol class="space-y-4 text-sm text-slate-700">
+                <li class="flex items-start gap-3 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                    <span class="bg-emerald-600 text-white font-bold w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-xs">1</span>
+                    <div>
+                        <strong class="block text-slate-900 mb-1">إنشاء حساب وملف جديد</strong>
+                        قم بتسجيل الدخول إلى حسابك على <a href="https://github.com" target="_blank" class="text-emerald-600 underline font-medium">GitHub</a>، ثم انشئ مستودعاً (Repository) جديداً وليكن باسم <code class="bg-white px-2 py-0.5 rounded border border-slate-200 text-emerald-700 font-mono">ibra-quiz</code> واجعله عاماً (Public).
+                    </div>
+                </li>
+                <li class="flex items-start gap-3 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                    <span class="bg-emerald-600 text-white font-bold w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-xs">2</span>
+                    <div>
+                        <strong class="block text-slate-900 mb-1">حفظ ملف الكود</strong>
+                        قم بنسخ هذا الكود بالكامل واحفظه في ملف نصي بصيغة HTML وسمِّه <code class="bg-white px-2 py-0.5 rounded border border-slate-200 text-emerald-700 font-mono">index.html</code>.
+                    </div>
+                </li>
+                <li class="flex items-start gap-3 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                    <span class="bg-emerald-600 text-white font-bold w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-xs">3</span>
+                    <div>
+                        <strong class="block text-slate-900 mb-1">رفع الملف إلى المستودع</strong>
+                        من داخل المستودع على GitHub، انقر على خيار <code class="bg-white px-2 py-0.5 rounded border border-slate-200 font-mono">Add file</code> ثم <code class="bg-white px-2 py-0.5 rounded border border-slate-200 font-mono">Upload files</code> وارفع ملف <code class="bg-emerald-700 font-mono text-emerald-700 bg-white">index.html</code> واضغط على <code class="bg-white px-2 py-0.5 rounded border border-slate-200 font-mono">Commit changes</code>.
+                    </div>
+                </li>
+                <li class="flex items-start gap-3 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                    <span class="bg-emerald-600 text-white font-bold w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-xs">4</span>
+                    <div>
+                        <strong class="block text-slate-900 mb-1">تفعيل النشر التلقائي (GitHub Pages)</strong>
+                        انتقل إلى إعدادات المستودع (<code class="bg-white px-2 py-0.5 rounded border border-slate-200 font-mono">Settings</code>)، ثم من القائمة الجانبية اختر <code class="bg-white px-2 py-0.5 rounded border border-slate-200 font-mono">Pages</code>. تحت قسم Build and deployment اختر الفرع <code class="bg-white px-2 py-0.5 rounded border border-slate-200 font-mono">main</code> (أو master) مع مجلد <code class="bg-white px-2 py-0.5 rounded border border-slate-200 font-mono">/ (root)</code> واضغط Save.
+                    </div>
+                </li>
+            </ol>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-6 px-4 text-center text-xs mt-12 border-t border-slate-800">
+        <p>جميع الحقوق محفوظة © مركز مصادر التعلم - ولاية إبراء | تصميم تعليمي تفاعلي</p>
+    </footer>
+
+    <script>
+        const questions = [
+            {
+                question: "تعتبر ولاية إبراء المركز الإداري لمحافظة:",
+                options: [
+                    "جنوب الشرقية",
+                    "شمال الشرقية",
+                    "مسقط",
+                    "الداخلية"
+                ],
+                correct: 1,
+                explanation: "إجابة صحيحة! ولاية إبراء هي المركز الإداري لمحافظة شمال الشرقية."
+            },
+            {
+                question: "شعار ولاية إبراء الرسمي هو:",
+                options: [
+                    "جبل الناصري",
+                    "وادي البطحاء",
+                    "مسجد العقبة",
+                    "عين أبو صالح"
+                ],
+                correct: 2,
+                explanation: "إجابة صحيحة! اتخذت الولاية من مسجد العقبة شعاراً لها."
+            },
+            {
+                question: "الوادي الذي يحتوي على تربة 'اللاتريت' بكميات كبيرة في ولاية إبراء هو:",
+                options: [
+                    "وادي نام",
+                    "وادي البطحاء",
+                    "وادي قفيفة",
+                    "وادي المزروع"
+                ],
+                correct: 0,
+                explanation: "إجابة صحيحة! وادي نام يحتوي على تربة اللاتريت بكميات كبيرة."
+            },
+            {
+                question: "بلغ عدد سكان ولاية إبراء حسب التعداد العام للسكان والمساكن والمنشآت لعام 2010م:",
+                options: [
+                    "19,986 نسمة",
+                    "24,473 نسمة",
+                    "27,216 نسمة",
+                    "30,500 نسمة"
+                ],
+                correct: 2,
+                explanation: "إجابة صحيحة! بلغ عدد السكان في عام 2010م نحو 27216 نسمة."
+            },
+            {
+                question: "تحد ولاية إبراء من جهة الجنوب ولاية دماء والطائيين.",
+                options: [
+                    "صواب",
+                    "خطأ"
+                ],
+                correct: 1,
+                explanation: "إجابة صحيحة! خطأ، الحد الجنوبي لولاية إبراء هو ولاية القابل، بينما تحدها دماء والطائيين من جهة الشرق."
+            },
+            {
+                question: "تشتهر ولاية إبراء بأصناف معينة من النخيل، مثل نخلة:",
+                options: [
+                    "الفرض",
+                    "الخلاص",
+                    "رأس الضيضو",
+                    "الخنيزي"
+                ],
+                correct: 2,
+                explanation: "إجابة صحيحة! تشتهر الولاية بنخلة رأس الضيضو."
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let answered = false;
+
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultScreen = document.getElementById('result-screen');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const questionCounter = document.getElementById('question-counter');
+        const progressBar = document.getElementById('progress-bar');
+        const feedbackBox = document.getElementById('feedback-box');
+        const nextBtn = document.getElementById('next-btn');
+
+        function startQuiz() {
+            welcomeScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+            currentQuestionIndex = 0;
+            score = 0;
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            answered = false;
+            feedbackBox.classList.add('hidden');
+            nextBtn.classList.add('hidden');
+            
+            const q = questions[currentQuestionIndex];
+            questionText.textContent = q.question;
+            questionCounter.textContent = `السؤال ${currentQuestionIndex + 1} من ${questions.length}`;
+            
+            const progressPercent = ((currentQuestionIndex) / questions.length) * 100;
+            progressBar.style.width = `${progressPercent}%`;
+
+            optionsContainer.innerHTML = '';
+            q.options.forEach((option, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'w-full text-right p-4 rounded-2xl border border-slate-200 bg-slate-50 hover:bg-emerald-50 hover:border-emerald-300 font-medium text-slate-700 transition-all-custom text-sm sm:text-base flex items-center justify-between group';
+                
+                const span = document.createElement('span');
+                span.textContent = option;
+                
+                const indicator = document.createElement('span');
+                indicator.className = 'w-6 h-6 rounded-full border border-slate-300 flex items-center justify-center text-xs group-hover:border-emerald-500 group-hover:text-emerald-600';
+                indicator.textContent = String.fromCharCode(65 + index); // A, B, C, D
+
+                btn.appendChild(span);
+                btn.appendChild(indicator);
+                
+                btn.onclick = () => selectOption(index, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function selectOption(selectedIndex, selectedBtn) {
+            if (answered) return;
+            answered = true;
+
+            const q = questions[currentQuestionIndex];
+            const optionButtons = optionsContainer.getElementsByTagName('button');
+
+            if (selectedIndex === q.correct) {
+                score++;
+                selectedBtn.classList.remove('bg-slate-50', 'border-slate-200');
+                selectedBtn.classList.add('bg-emerald-50', 'border-emerald-500', 'text-emerald-900', 'font-bold');
+                feedbackBox.className = 'p-4 rounded-2xl mb-6 text-sm font-medium bg-emerald-50 text-emerald-800 border border-emerald-200';
+                feedbackBox.textContent = q.explanation;
+            } else {
+                selectedBtn.classList.remove('bg-slate-50', 'border-slate-200');
+                selectedBtn.classList.add('bg-rose-50', 'border-rose-500', 'text-rose-900', 'font-bold');
+                
+                // Highlight correct answer
+                optionButtons[q.correct].classList.remove('bg-slate-50', 'border-slate-200');
+                optionButtons[q.correct].classList.add('bg-emerald-50', 'border-emerald-500', 'text-emerald-900', 'font-bold');
+                
+                feedbackBox.className = 'p-4 rounded-2xl mb-6 text-sm font-medium bg-rose-50 text-rose-800 border border-rose-200';
+                feedbackBox.textContent = `إجابة غير دقيقة. الإجابة الصحيحة هي: ${q.options[q.correct]}`;
+            }
+
+            // Disable all buttons after selection
+            Array.from(optionButtons).forEach(btn => btn.disabled = true);
+
+            feedbackBox.classList.remove('hidden');
+            nextBtn.classList.remove('hidden');
+
+            if (currentQuestionIndex === questions.length - 1) {
+                nextBtn.textContent = "عرض النتيجة النهائية";
+            } else {
+                nextBtn.textContent = "السؤال التالي";
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            quizScreen.classList.add('hidden');
+            resultScreen.classList.remove('hidden');
+            
+            document.getElementById('final-score').textContent = `${score} / ${questions.length}`;
+            
+            const resultMessage = document.getElementById('result-message');
+            const percentage = (score / questions.length) * 100;
+            
+            if (percentage === 100) {
+                resultMessage.textContent = "ممتاز جداً! لقد أجبت على جميع الأسئلة بدقة فائقة، ولديك معرفة واسعة بولاية إبراء.";
+            } else if (percentage >= 70) {
+                resultMessage.textContent = "أداء رائع وممتاز! لقد حققت نتيجة طيبة تدل على استيعابك للمعلومات.";
+            } else {
+                resultMessage.textContent = "جيد! يمكنك مراجعة النص مرة أخرى وإعادة المحاولة لتحقيق الدرجة الكاملة.";
+            }
+        }
+
+        function restartQuiz() {
+            resultScreen.classList.add('hidden');
+            welcomeScreen.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
